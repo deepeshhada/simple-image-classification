@@ -1,0 +1,1 @@
+# IISc_DL_Project2_FashionMNIST
