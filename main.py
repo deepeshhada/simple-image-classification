@@ -48,7 +48,7 @@ def print_file(model, loss, accuracy, file_name, is_mse=False):
 			inputs, labels = inputs.view(test_batch_size, -1).to(device), to_mse_labels(labels).to(device)
 			_, labels = torch.max(labels, 1)
 		else:
-			inputs, labels = inputs.view(test_batch_size, -1).to(device), labels.to(device)
+			inputs, labels = inputs.to(device), labels.to(device)
 
 		outputs = model(inputs)
 		_, pred = torch.max(outputs.data, 1)
@@ -67,22 +67,23 @@ def print_file(model, loss, accuracy, file_name, is_mse=False):
 	return
 
 
+def convolution_neural_net():
+	torch.manual_seed(0)
+	model = CNN().to(device)
+	model.load_state_dict(torch.load("./models/model_cnn", map_location=torch.device('cpu')))
+	print_file(model=model, loss=0.104466, accuracy=91.07, file_name="convolution_neural_net.txt")
+	return
+
+
 def multi_layer_net():
+	torch.manual_seed(0)
 	model = FNN().to(device)
 	model.load_state_dict(torch.load("./models/model_fnn", map_location=torch.device('cpu')))
-	# TODO: get loss and accuracy
-	print_file(model, str(1.28), str(0.88), "multi_layer_net.txt", True)
+	print_file(model=model, loss=0.002703, accuracy=90.33, file_name="multi_layer_net.txt", is_mse=True)
 	return
 
 
-def convolution_neural_net():
-	model = CNN().to(device)
-	model.load_state_dict(torch.load("./model_cnn"))
-	# TODO: get loss and accuracy
-	print_file(model, str(1.28), str(0.88), "convolution_neural_net.txt")
-	return
-
-
+convolution_neural_net()
 multi_layer_net()
 
 
