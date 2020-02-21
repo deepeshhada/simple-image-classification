@@ -25,21 +25,6 @@ def to_mse_labels(targets):
 	return y_onehot
 
 
-def evaluation(dataloader, model):
-	total, correct = 0, 0
-
-	for data in dataloader:
-		inputs, labels = data
-		inputs, labels = inputs.view(test_batch_size, -1).to(device), to_mse_labels(labels).to(device)
-		outputs = model(inputs)
-		_, pred = torch.max(outputs.data, 1)
-		total += labels.size(0)
-		true = torch.argmax(labels, 1)
-		correct += (pred == true).sum().item()
-
-	return 100 * correct / total
-
-
 def print_file(model, loss, accuracy, file_name, is_mse=False):
 	for data in testloader:
 		inputs, labels = data
@@ -71,7 +56,7 @@ def convolution_neural_net():
 	torch.manual_seed(0)
 	model = CNN().to(device)
 	model.load_state_dict(torch.load("./models/model_cnn", map_location=torch.device('cpu')))
-	print_file(model=model, loss=0.104466, accuracy=91.07, file_name="convolution_neural_net.txt")
+	print_file(model=model, loss=0.104466, accuracy=0.9107, file_name="convolution_neural_net.txt")
 	return
 
 
@@ -79,7 +64,7 @@ def multi_layer_net():
 	torch.manual_seed(0)
 	model = FNN().to(device)
 	model.load_state_dict(torch.load("./models/model_fnn", map_location=torch.device('cpu')))
-	print_file(model=model, loss=0.002703, accuracy=90.33, file_name="multi_layer_net.txt", is_mse=True)
+	print_file(model=model, loss=0.002703, accuracy=0.9033, file_name="multi_layer_net.txt", is_mse=True)
 	return
 
 

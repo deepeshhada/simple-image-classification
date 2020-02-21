@@ -44,16 +44,21 @@ testloader = torch.utils.data.DataLoader(test_set, batch_size=test_batch_size, s
 net = FNN().to(device)
 
 
-def evaluation(dataloader, model=net):
+def evaluation(dataloader, model=net, build_confusion_matrix=False):
 	total, correct = 0, 0
 	for data in dataloader:
 		inputs, labels = data
-		inputs, labels = inputs.view(batch_size, -1).to(device), to_mse_labels(labels).to(device)
+		inputs, labels = inputs.view(train_batch_size, -1).to(device), to_mse_labels(labels).to(device)
 		outputs = model(inputs)
 		_, pred = torch.max(outputs.data, 1)
 		total += labels.size(0)
 		true = torch.argmax(labels, 1)
 		correct += (pred == true).sum().item()
+        
+        if build_confusion_matrix:
+            confusion = confusion_matrix(true.view(-1), pred.view(-1))
+            print(confusion)
+            
 	return 100 * correct / total
 
 

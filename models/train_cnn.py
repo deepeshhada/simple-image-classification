@@ -31,7 +31,7 @@ test_set = torchvision.datasets.FashionMNIST(
 testloader = torch.utils.data.DataLoader(test_set, batch_size=test_batch_size, shuffle=False)
 
 
-def evaluation(dataloader, model):
+def evaluation(dataloader, model, build_confusion_matrix=False):
 	total, correct = 0, 0
 	classes = 10
 	confusion_matrix = torch.zeros(classes, classes)
@@ -43,8 +43,9 @@ def evaluation(dataloader, model):
 		total += labels.size(0)
 		correct += (pred == labels).sum().item()
 
-		for t, p in zip(labels.view(-1), pred.view(-1)):
-			confusion_matrix[t.long(), p.long()] += 1
+		if build_confusion_matrix:
+            confusion = confusion_matrix(labels.view(-1), pred.view(-1))
+            print(confusion)
 
 	return 100 * correct / total
 
