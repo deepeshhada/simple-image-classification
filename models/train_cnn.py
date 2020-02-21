@@ -4,6 +4,7 @@ import torch.optim as optim
 import torchvision
 import torchvision.transforms as transforms
 import matplotlib.pylab as pylab
+from sklearn.metrics import confusion_matrix
 from classes.CNN import CNN
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -44,8 +45,8 @@ def evaluation(dataloader, model, build_confusion_matrix=False):
 		correct += (pred == labels).sum().item()
 
 		if build_confusion_matrix:
-            confusion = confusion_matrix(labels.view(-1), pred.view(-1))
-            print(confusion)
+			confusion = confusion_matrix(labels.view(-1), pred.view(-1))
+			print(confusion)
 
 	return 100 * correct / total
 

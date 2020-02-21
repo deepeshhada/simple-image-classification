@@ -4,6 +4,7 @@ import torch.optim as optim
 import torchvision
 import torchvision.transforms as transforms
 import matplotlib.pylab as pylab
+from sklearn.metrics import confusion_matrix
 from classes.FNN import FNN
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -54,11 +55,11 @@ def evaluation(dataloader, model=net, build_confusion_matrix=False):
 		total += labels.size(0)
 		true = torch.argmax(labels, 1)
 		correct += (pred == true).sum().item()
-        
-        if build_confusion_matrix:
-            confusion = confusion_matrix(true.view(-1), pred.view(-1))
-            print(confusion)
-            
+
+		if build_confusion_matrix:
+			confusion = confusion_matrix(true.view(-1), pred.view(-1))
+			print(confusion)
+
 	return 100 * correct / total
 
 
